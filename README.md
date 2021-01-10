@@ -1,3 +1,4 @@
+I added some notes to DBoW2
 DBoW2
 =====
 
@@ -37,39 +38,3 @@ If you use this software in an academic work, please cite:
 ### Weighting and Scoring
 
 DBoW2 implements the same weighting and scoring mechanisms as DBow. Check them here. The only difference is that DBoW2 scales all the scores to [0..1], so that the scaling flag is not used any longer.
-
-### Save & Load
-
-All vocabularies and databases can be saved to and load from disk with the save and load member functions. When a database is saved, the vocabulary it is associated with is also embedded in the file, so that vocabulary and database files are completely independent.
-
-You can also add the vocabulary or database data to any file opened with a `cv::FileStorage` structure.
-
-You can save the vocabulary or the database with any file extension. If you use .gz, the file is automatically compressed (OpenCV behaviour).
-
-## Implementation notes
-
-### Template parameters
-
-DBoW2 has two main classes: `TemplatedVocabulary` and `TemplatedDatabase`. These implement the visual vocabulary to convert images into bag-of-words vectors and the database to index images. These classes are templated:
-
-    template<class TDescriptor, class F>
-    class TemplatedVocabulary
-    {
-      ...
-    };
-
-    template<class TDescriptor, class F>
-    class TemplatedDatabase
-    {
-      ...
-    };
-
-Two classes must be provided: `TDescriptor` is the data type of a single descriptor vector, and `F`, a class with the functions to manipulate descriptors, derived from `FClass`.
-
-For example, to work with ORB descriptors, `TDescriptor` is defined as `cv::Mat` (of type `CV_8UC1`), which is a single row that contains 32 8-bit values. When features are extracted from an image, a `std::vector<TDescriptor>` must be obtained. In the case of BRIEF, `TDescriptor` is defined as `boost::dynamic_bitset<>`.
-
-The `F` parameter is the name of a class that implements the functions defined in `FClass`. These functions get `TDescriptor` data and compute some result. Classes to deal with ORB and BRIEF descriptors are already included in DBoW2. (`FORB`, `FBrief`).
-
-### Predefined Vocabularies and Databases
-
-To make it easier to use, DBoW2 defines two kinds of vocabularies and databases: `OrbVocabulary`, `OrbDatabase`, `BriefVocabulary`, `BriefDatabase`. Please, check the demo application to see how they are created and used.
